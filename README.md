@@ -1,9 +1,11 @@
 # k8s中部署Kafka-eagle
-简介
+### 简介
 kafka eagle（kafka鹰） 是一款由国内公司开源的Kafka集群监控系统，可以用来监视kafka集群的broker状态、Topic信息、IO、内存、consumer线程、偏移量等信息，并进行可视化图表展示。独特的KQL还可以通过SQL在线查询kafka中的数据。
-1.下载kafka-eagle镜像
+
+### 1.下载kafka-eagle镜像
 docker pull registry.cn-shanghai.aliyuncs.com/c-things/kafka-eagle:2.1.0
-2. kafka-eagle数据存储
+
+### 2. kafka-eagle数据存储
 2.1 Sqlite；
 kafka-eagle镜像中已安装sqlite，默认使用sqlite；
 2.2 MySQL;
@@ -228,7 +230,7 @@ kubectl apply -f mysql-ss-svc.yaml
 mysql -h ip -P 30306 -uke -ppwd123456
 
 
-3. 部署kafka-eagle
+### 3. 部署kafka-eagle
 1). 修改system-config.properties文件：（根据实际修改）
 vim system-config.properties
 ######################################
@@ -414,24 +416,27 @@ spec:
       nodePort: 30048
   selector:
     workload.user.cattle.io/workloadselector: deployment-kafka-eagle
-3). 配置登录账户密码
+    
+ 3). 配置登录账户密码
 vim kafka_client_jaas.conf
 KafkaClient {
   org.apache.kafka.common.security.plain.PlainLoginModule required
   username="admin"
   password="admin-secret";
 };
-4). 分别执行以下命令完成部署:
+
+ 4). 分别执行以下命令完成部署:
 创建configmap：
 kubectl create configmap kafka-eagle-config -n default --from-file=kafka_client_jaas.conf \
 --from-file=system-config.properties
 部署kafka-eagle：
 kubectl apply -f kafka-eagle.yml
-4. 浏览器访问
-浏览器输入: http://ip:30048
-测试环境：http://10.126.144.203:30048/
+
+### 4. 浏览器访问
+ 浏览器输入: http://ip:30048
+ 测试环境：http://10.126.144.203:30048/
  
-账号:admin 密码:123456
+ 账号:admin 密码:123456
 
 http://www.kafka-eagle.org/articles/docs/quickstart/dashboard.html
 
